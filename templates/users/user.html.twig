@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil {{ user.login }}{% endblock %}
+
+{% block body %}
+
+<div class="container mt-3">
+    <div class="row">
+        <div class="col-4">
+            <h1>{{ user.login }} <span class="badge badge-secondary">{{ user.role.name }}</span></h1>
+        </div>
+        <div class="col-8">
+            <h1>Magazyny</h1>
+            <a class="btn btn-primary mb-1" href="{{ path('adddepottouser', {id: user.id}) }}" role="button">Dodaj</a>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Login</th>
+                        <th scope="col">Magazyn</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for depot in depots %}
+                    <tr>
+                        <td>{{ depot.id }}</td>
+                        <td>{{ depot.user.login }}</td>
+                        <td>{{ depot.depot.name }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

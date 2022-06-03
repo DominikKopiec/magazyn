@@ -1,3 +1,27 @@
-#index:
-#    path: /
-#    controller: App\Controller\DefaultController::index
+index:
+    path: /
+    controller: App\Controller\DefaultController::index
+units:
+    path: /units
+    controller: App\Controller\UnitsController::index
+depots:
+    path: /depots
+    controller: App\Controller\DepotsController::show
+depot:
+    path: /depots/{id}
+    controller: App\Controller\DepotsController::showone
+newdepod:
+    path: /newdepot
+    controller: App\Controller\DepotsController::add
+user:
+    path: /users/{id}
+    controller: App\Controller\UsersController::showone
+users:
+    path: /users
+    controller: App\Controller\UsersController::index
+newuser:
+    path: /newuser
+    controller: App\Controller\UsersController::add
+adddepottouser:
+    path: /users/{id}/addDepot
+    controller: App\Controller\UsersController::addDepot

@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Magazyny{% endblock %}
+
+{% block body %}
+<div class="container-fluid pt-5">
+    <div class="row">
+        <div class="col-12">
+                {% if form is defined %}
+                {{ form(form) }}
+                {% endif %}
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col">
+            <table class="table">
+                <thead>
+                    <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Nazwa</th>
+                    <th scope="col">Jednostka</th>
+                    <th scope="col">Kod</th>
+                    <th scope="col">Ilość</th>
+                    <th scope="col">VAT</th>
+                    <th scope="col">Cena</th>
+                    <th scope="col">Plik</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for status in status %}
+                    <tr>
+                    <th scope="row">{{ status.id }}</th>
+                    <td>{{ status.article.name}}</td>
+                    <td>{{ status.article.unit.name}}</td>
+                    <td>{{ status.code}}</td>
+                    <td>{{ status.value }}</td>
+                    <td>{{ status.vat }}</td>
+                    <td>{{ status.price }}</td>
+                    <td>{{ status.file }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
