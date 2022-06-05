@@ -4,24 +4,16 @@
 
 {% block body %}
 
-<div class="container-fluid pt-5">
+<div class="container-fluid pt-5 ">
     <a class="btn btn-primary" href="{{ path('newdepod') }}" role="button">Stwórz magazyn</a>
-    <div class="row">
+    <div class="row d-flex justify-content-center">
     {% for depot in depots %}
         <div class="card m-1" style="width: 300px;">
             <div class="card-body float-left">
                 <h5 class="card-title">{{ depot.name }}</h5>
-                <h6>{{ depot.id }}</h6>
                 <a href="{{ path('depot', {id: depot.id}) }}" class="card-link">Zobacz</a>
             </div>
         </div>   
-        <div class="card m-1" style="width: 300px;">
-            <div class="card-body float-left">
-                <h5 class="card-title">{{ depot.name }}</h5>
-                <h6>{{ depot.id }}</h6>
-                <a href="{{ path('depot', {id: depot.id}) }}" class="card-link">Zobacz</a>
-            </div>
-        </div>  
     {% endfor %}
     </div>
 </div>

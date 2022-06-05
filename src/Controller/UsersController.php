@@ -20,6 +20,9 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+
 
 
 class UsersController extends AbstractController
@@ -87,9 +90,15 @@ class UsersController extends AbstractController
 
         $usertodepot = new UserToDepot();
         $form = $this->createFormBuilder($usertodepot)
-            
+            ->add('user', EntityType::class, [
+                'class' => Users::class,
+                'choice_label' => 'id',
+                'attr' => array('class' => 'form-control', 'disabled' => true),
+                'placeholder' => $id,
+                
+            ])
             ->add('depot', ChoiceType::class, [
-            'choices' => $depots, 'choice_label' => 'name', 'attr' => array('class' => 'form-control')] )
+                'choices' => $depots, 'choice_label' => 'name', 'attr' => array('class' => 'form-control')] )
             ->add('save', SubmitType::class, array(
                 'label' => 'Dodaj',
                 'attr' => array('class' => 'btn btn-primary mt-3')
@@ -104,11 +113,11 @@ class UsersController extends AbstractController
                 $entityManager->persist($task);
                 $entityManager->flush();
 
-                return $this->redirectToRoute('usertodepot');
+                return $this->redirectToRoute('user', ['id' => $id]);
             }
 
         return $this->render('users/addDepot.html.twig', array(
-            'form' => $form,
+            'form' => $form->createView(),
         ));
     }
 }

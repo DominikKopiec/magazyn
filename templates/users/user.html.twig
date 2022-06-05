@@ -6,11 +6,11 @@
 
 <div class="container mt-3">
     <div class="row">
-        <div class="col-4">
+        <div class="col-md-4">
             <h1>{{ user.login }} <span class="badge badge-secondary">{{ user.role.name }}</span></h1>
         </div>
-        <div class="col-8">
-            <h1>Magazyny</h1>
+        <div class="col-md-8">
+            <h3>Magazyny:</h3>
             <a class="btn btn-primary mb-1" href="{{ path('adddepottouser', {id: user.id}) }}" role="button">Dodaj</a>
             <table class="table table-striped">
                 <thead>

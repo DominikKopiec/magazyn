@@ -13,6 +13,9 @@ depot:
 newdepod:
     path: /newdepot
     controller: App\Controller\DepotsController::add
+addarticletodepot:
+    path: /depots/{id}/accept
+    controller: App\Controller\DepotsController::addarticle
 user:
     path: /users/{id}
     controller: App\Controller\UsersController::showone

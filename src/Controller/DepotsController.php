@@ -30,57 +30,12 @@ class DepotsController extends AbstractController
             'depots'=> $depots,
         ));
     }
-    public function showone(StatusRepository $StatusRepository,  Request $request, int $id): Response {
-
-        $repo = $this->getDoctrine()->getRepository(Articles::class);
-        $article = $repo->findAll();
-        
-        $status = new Status();
-        $form = $this->createFormBuilder($status)
-            ->add('depot', IntegerType::class, array('attr' => 
-            array('class' => 'form-control', 'value'=>$id, 'empty_data' => '')))
-            ->add('article', ChoiceType::class, [
-                'choices' => $article, 'choice_label' => 'name', 'attr' => array('class' => 'form-control')] )
-                
-            ->add('unit', TextType::class, array('attr' => 
-            array('class' => 'form-control', 'value' => $article[3]->getUnit()->getName(), 'disabled' => 'true')))
-            ->add('code', TextType::class, array('attr' => 
-            array('class' => 'form-control')))
-            ->add('value', TextType::class, array('attr' => 
-            array('class' => 'form-control')))
-            ->add('vat', TextType::class, array('attr' => 
-            array('class' => 'form-control')))
-            ->add('price', TextType::class, array('attr' => 
-            array('class' => 'form-control')))
-            ->add('file', TextType::class, array('attr' => 
-            array('class' => 'form-control')))
-            ->add('save', SubmitType::class, array(
-                'label' => 'Dodaj',
-                'attr' => array('class' => 'btn btn-primary mt-3')
-            ))
-            ->getForm();
-            $form->handleRequest($request);
-
-            if ($form->isSubmitted() && $form->isValid()) {
-                $task = $form->getData();
-
-                $entityManager = $this->getDoctrine()->getManager();
-                $entityManager->persist($task);
-                $entityManager->flush();
-
-                return $this->redirectToRoute('depot', array(
-                    'id' => $id,
-                ));
-            }
-
-
-
-
+    public function showone(StatusRepository $StatusRepository, int $id): Response {
         $repository = $this->getDoctrine()->getRepository(Status::class);
         $status = $repository->findByDepot($id);
         return $this->render('depots/depot.html.twig', array(
             'status' => $status,
-            'form' => $form->createView()
+            'id' => $id
         ));
     }
 
@@ -113,5 +68,12 @@ class DepotsController extends AbstractController
         ));
     
 
+    }
+
+    public function addarticle(Request $request): Response {
+
+
+
+        return $this->render('depots/addArticle.html.twig');
     }
 }
