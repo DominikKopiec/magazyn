@@ -8,6 +8,8 @@ use App\Entity\Status;
 use App\Repository\StatusRepository;
 use App\Entity\Articles;
 use App\Repository\ArticlesRepository;
+use App\Entity\Units;
+use App\Repository\UnitsRepository;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -19,6 +21,9 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 class DepotsController extends AbstractController
 {
@@ -70,10 +75,56 @@ class DepotsController extends AbstractController
 
     }
 
-    public function addarticle(Request $request): Response {
+    public function addArticle(int $id, Request $request): Response {
 
 
+        $status = new Status();
+        $form = $this->createFormBuilder($status)
+            ->add('depot', EntityType::class, [
+                'class' => Depots::class,
+                'choice_label' => 'id',
+                'attr' => array('class' => 'form-control', 'readonly' => true),
+                'placeholder' => $id
+            ])
+            ->add('article', EntityType::class, [
+                'class' => Articles::class,
+                'choice_label' => 'name',
+                'attr' => array('class' => 'form-control'),  
+            ])
+            ->add('unit', EntityType::class, [
+                'class' => Units::class,
+                'choice_label' => 'name',
+                'attr' => array('class' => 'form-control')
+            ])
+            ->add('code', TextType::class, array('attr' => 
+            array('class' => 'form-control')))
+            ->add('value', TextType::class, array('attr' => 
+            array('class' => 'form-control')))
+            ->add('vat', TextType::class, array('attr' => 
+            array('class' => 'form-control')))
+            ->add('price', TextType::class, array('attr' => 
+            array('class' => 'form-control')))
+            ->add('file', TextType::class, array('attr' => 
+            array('class' => 'form-control')))
+            ->add('save', SubmitType::class, array(
+                'label' => 'Dodaj',
+                'attr' => array('class' => 'btn btn-primary mt-3')
+            ))
+            ->getForm();
+            $form->handleRequest($request);
 
-        return $this->render('depots/addArticle.html.twig');
+            if ($form->isSubmitted() && $form->isValid()) {
+                $task = $form->getData();
+
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($task);
+                $entityManager->flush();
+
+                return $this->redirectToRoute('depot', ['id' => $id]);
+            }
+
+        return $this->render('depots/addArticle.html.twig', array(
+            'form' => $form->createView(),
+        ));
     }
 }
