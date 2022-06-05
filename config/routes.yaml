@@ -1,6 +1,9 @@
 index:
     path: /
     controller: App\Controller\DefaultController::index
+articles:
+    path: /articles
+    controller: App\Controller\ArticlesController::index
 units:
     path: /units
     controller: App\Controller\UnitsController::index
@@ -16,6 +19,12 @@ newdepod:
 addarticletodepot:
     path: /depots/{id}/accept
     controller: App\Controller\DepotsController::addarticle
+issuearticlefromdepot:
+    path: /depots/{id}/issueproduct
+    controller: App\Controller\DepotsController::issueproduct
+addusertodepot:
+    path: /depots/{id}/adduser
+    controller: App\Controller\DepotsController::adduser
 user:
     path: /users/{id}
     controller: App\Controller\UsersController::showone

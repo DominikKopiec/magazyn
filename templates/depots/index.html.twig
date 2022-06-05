@@ -2,13 +2,16 @@
 
 {% block title %}Magazyny{% endblock %}
 
+
+
 {% block body %}
 
-<div class="container-fluid pt-5 ">
-    <a class="btn btn-primary" href="{{ path('newdepod') }}" role="button">Stwórz magazyn</a>
-    <div class="row d-flex justify-content-center">
+<div class="container">
+    <h1 class="text-center m-5">Magazyny</h1>
+    <a class="btn btn-primary m-1" href="{{ path('newdepod') }}" role="button">Stwórz magazyn</a>
+    <div class="row d-flex justify-content-between">
     {% for depot in depots %}
-        <div class="card m-1" style="width: 300px;">
+        <div class="card col-md-3 m-1">
             <div class="card-body float-left">
                 <h5 class="card-title">{{ depot.name }}</h5>
                 <a href="{{ path('depot', {id: depot.id}) }}" class="card-link">Zobacz</a>

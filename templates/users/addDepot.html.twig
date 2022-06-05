@@ -3,9 +3,10 @@
 {% block title %}Dodaj magazyn{% endblock %}
 
 {% block body %}
-    <div class="container-fluid pt-5">
-        <div class="row">
-            <div class="col-12">
+    <div class="container">
+        <h1 class="m-5 text-center">Dodaj magazyn</h1>
+        <div class="row d-flex justify-content-center">
+            <div class="col-md-6">
                 {% if form is defined %}
                 {{ form(form) }}
                 {% endif %}

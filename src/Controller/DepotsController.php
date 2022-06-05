@@ -10,6 +10,10 @@ use App\Entity\Articles;
 use App\Repository\ArticlesRepository;
 use App\Entity\Units;
 use App\Repository\UnitsRepository;
+use App\Entity\UserToDepot;
+use App\Repository\UserToDepotRepository;
+use App\Entity\Users;
+use App\Repository\UsersRepository;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -76,8 +80,6 @@ class DepotsController extends AbstractController
     }
 
     public function addArticle(int $id, Request $request): Response {
-
-
         $status = new Status();
         $form = $this->createFormBuilder($status)
             ->add('depot', EntityType::class, [
@@ -127,4 +129,86 @@ class DepotsController extends AbstractController
             'form' => $form->createView(),
         ));
     }
+
+    public function issueproduct(int $id, Request $request): Response {
+        $status = new Status();
+
+        $form = $this->createFormBuilder($status)
+            ->add('code', TextType::class, array('attr' => 
+            array('class' => 'form-control')))
+            ->add('value', TextType::class, array('attr' => 
+            array('class' => 'form-control')))
+            ->add('save', SubmitType::class, array(
+                'label' => 'Wydaj',
+                'attr' => array('class' => 'btn btn-primary mt-3')
+            ))
+            ->getForm();
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                $code = $form->get('code')->getData();
+                $difference = $form->get('value')->getData();
+                
+                $entityManager = $this->getDoctrine()->getManager();
+                $statuss = $entityManager->getRepository(Status::class)->findByCode($code);
+                if(($statuss[0]->getValue()-$difference)>0){
+                    $statuss[0]->setValue($statuss[0]->getValue()-$difference);
+                    $entityManager->flush();
+                    return $this->redirectToRoute('depot', ['id' => $id]);
+                }
+                if(($statuss[0]->getValue()-$difference)==0){
+                    $entityManager->remove($statuss[0]);
+                    $entityManager->flush();
+                    return $this->redirectToRoute('depot', ['id' => $id]);
+                }
+
+                
+            }
+
+        return $this->render('depots/issue.html.twig', array(
+            'form' => $form->createView()
+        ));
+    
+
+    }
+
+    public function adduser(int $id, Request $request): Response {
+        $usertodepot = new UserToDepot();
+        $form = $this->createFormBuilder($usertodepot)
+            ->add('depot', EntityType::class, [
+                'class' => Depots::class,
+                'choice_label' => 'id',
+                'attr' => array('class' => 'form-control', 'readonly' => true),
+                'placeholder' => $id
+            ])
+            ->add('user', EntityType::class, [
+                'class' => Users::class,
+                'choice_label' => 'login',
+                'attr' => array('class' => 'form-control')
+            ])
+            ->add('save', SubmitType::class, array(
+                'label' => 'Dodaj',
+                'attr' => array('class' => 'btn btn-primary mt-3')
+            ))
+            ->getForm();
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()) {
+                $task = $form->getData();
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($task);
+                $entityManager->flush();
+                return $this->redirectToRoute('depot', ['id' => $id]);
+            }
+
+
+        $repo = $this->getDoctrine()->getRepository(UserToDepot::class);
+        $users = $repo->findByDepot($id);
+        
+        return $this->render('depots/addUser.html.twig', array(
+            'form' => $form->createView(),
+            'users' => $users
+            
+        ));
+    }
+    
 }
