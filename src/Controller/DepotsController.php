@@ -17,6 +17,9 @@ use App\Repository\UsersRepository;
 
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -115,21 +118,13 @@ class DepotsController extends AbstractController
             ->add('file', FileType::class, [
                 'label' => 'Dodaj załącznik',
                 'attr' => ['class' => 'form-control-file'],
-                // unmapped means that this field is not associated to any entity property
                 'mapped' => false,
-
-                // make it optional so you don't have to re-upload the PDF file
-                // every time you edit the Product details
                 'required' => false,
-
-                // unmapped fields can't define their validation using annotations
-                // in the associated entity, so you can use the PHP constraint classes
                 'constraints' => [
                     new File([
-                        'maxSize' => '1024k',
                         'mimeTypes' => [
                             'application/pdf',
-                            'application/x-pdf',
+                            'application/xml',
                         ],
                         'mimeTypesMessage' => 'Please upload a valid PDF document',
                     ])
@@ -143,6 +138,18 @@ class DepotsController extends AbstractController
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
+                if($request->files->get('form')['file']) {
+                    $file = $request->files->get('form')['file'];
+                    $uploads_directory = $this->getParameter('uploads_directory');
+                    $filename =md5(uniqid()) .  '.'  . $file->guessExtension();
+                    
+                    $file->move(
+                    $uploads_directory,
+                    $filename
+                    );
+                }
+            
+                
                 $task = $form->getData();
 
                 $entityManager = $this->getDoctrine()->getManager();
