@@ -15,6 +15,9 @@ use App\Repository\UserToDepotRepository;
 use App\Entity\Users;
 use App\Repository\UsersRepository;
 
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Validator\Constraints\File;
+
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 use Symfony\Component\HttpFoundation\Response;
@@ -109,8 +112,29 @@ class DepotsController extends AbstractController
             array('class' => 'form-control')))
             ->add('price', TextType::class, array('attr' => 
             array('class' => 'form-control')))
-            ->add('file', TextType::class, array('attr' => 
-            array('class' => 'form-control')))
+            ->add('file', FileType::class, [
+                'label' => 'Dodaj załącznik',
+                'attr' => ['class' => 'form-control-file'],
+                // unmapped means that this field is not associated to any entity property
+                'mapped' => false,
+
+                // make it optional so you don't have to re-upload the PDF file
+                // every time you edit the Product details
+                'required' => false,
+
+                // unmapped fields can't define their validation using annotations
+                // in the associated entity, so you can use the PHP constraint classes
+                'constraints' => [
+                    new File([
+                        'maxSize' => '1024k',
+                        'mimeTypes' => [
+                            'application/pdf',
+                            'application/x-pdf',
+                        ],
+                        'mimeTypesMessage' => 'Please upload a valid PDF document',
+                    ])
+                ],
+            ])
             ->add('save', SubmitType::class, array(
                 'label' => 'Dodaj',
                 'attr' => array('class' => 'btn btn-primary mt-3')
