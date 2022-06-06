@@ -88,17 +88,23 @@ class UsersController extends AbstractController
         $repo = $this->getDoctrine()->getRepository(Depots::class);
         $depots = $repo->findAll();
 
+        $repository = $this->getDoctrine()->getRepository(Users::class);
+        $user = $repository->find($id);
+       
+        
         $usertodepot = new UserToDepot();
         $form = $this->createFormBuilder($usertodepot)
-            ->add('user', EntityType::class, [
-                'class' => Users::class,
-                'choice_label' => 'id',
-                'attr' => array('class' => 'form-control', 'disabled' => true),
-                'placeholder' => $id,
-                
+            ->add('user', ChoiceType::class, [
+                'choices' => [$user], 
+                'choice_label' => 'id', 
+                'attr' => array('class' => 'form-control', 'readonly' => true),
+
+                ])
+            ->add('depot', EntityType::class, [
+                'class' => Depots::class,
+                'choice_label' => 'name',
+                'attr' => array('class' => 'form-control')  
             ])
-            ->add('depot', ChoiceType::class, [
-                'choices' => $depots, 'choice_label' => 'name', 'attr' => array('class' => 'form-control')] )
             ->add('save', SubmitType::class, array(
                 'label' => 'Dodaj',
                 'attr' => array('class' => 'btn btn-primary mt-3')

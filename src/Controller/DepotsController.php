@@ -80,13 +80,16 @@ class DepotsController extends AbstractController
     }
 
     public function addArticle(int $id, Request $request): Response {
+
+        $repository = $this->getDoctrine()->getRepository(Depots::class);
+        $depot = $repository->find($id);
+        
         $status = new Status();
         $form = $this->createFormBuilder($status)
-            ->add('depot', EntityType::class, [
-                'class' => Depots::class,
-                'choice_label' => 'id',
+            ->add('depot', ChoiceType::class, [
+                'choices' => [$depot], 
+                'choice_label' => 'id', 
                 'attr' => array('class' => 'form-control', 'readonly' => true),
-                'placeholder' => $id
             ])
             ->add('article', EntityType::class, [
                 'class' => Articles::class,
@@ -173,13 +176,16 @@ class DepotsController extends AbstractController
     }
 
     public function adduser(int $id, Request $request): Response {
+
+        $repository = $this->getDoctrine()->getRepository(Depots::class);
+        $depot = $repository->find($id);
+
         $usertodepot = new UserToDepot();
         $form = $this->createFormBuilder($usertodepot)
-            ->add('depot', EntityType::class, [
-                'class' => Depots::class,
-                'choice_label' => 'id',
+            ->add('depot', ChoiceType::class, [
+                'choices' => [$depot], 
+                'choice_label' => 'id', 
                 'attr' => array('class' => 'form-control', 'readonly' => true),
-                'placeholder' => $id
             ])
             ->add('user', EntityType::class, [
                 'class' => Users::class,
@@ -197,7 +203,7 @@ class DepotsController extends AbstractController
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->persist($task);
                 $entityManager->flush();
-                return $this->redirectToRoute('depot', ['id' => $id]);
+                return $this->redirectToRoute('addusertodepot', ['id' => $id]);
             }
 
 
