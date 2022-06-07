@@ -104,14 +104,6 @@ class DepotsController extends AbstractController
                 'class' => Articles::class,
                 'choice_label' => 'name',
                 'attr' => array('class' => 'form-control'),
-                'choice_attr' => function ($val) {
-                    return ['jednostka' => $val->getUnit()->getId()];
-                }, 
-            ])
-            ->add('unit', EntityType::class, [
-                'class' => Units::class,
-                'choice_label' => 'name',
-                'attr' => array('class' => 'form-control')
             ])
             ->add('code', TextType::class, array('attr' => 
             array('class' => 'form-control')))

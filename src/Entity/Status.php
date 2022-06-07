@@ -21,10 +21,6 @@ class Status
     #[ORM\JoinColumn(nullable: false)]
     private $article;
 
-    #[ORM\ManyToOne(targetEntity: Units::class, inversedBy: 'status')]
-    #[ORM\JoinColumn(nullable: false)]
-    private $unit;
-
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $code;
 
@@ -65,18 +61,6 @@ class Status
     public function setArticle(?Articles $article): self
     {
         $this->article = $article;
-
-        return $this;
-    }
-
-    public function getUnit(): ?Units
-    {
-        return $this->unit;
-    }
-
-    public function setUnit(?Units $unit): self
-    {
-        $this->unit = $unit;
 
         return $this;
     }
