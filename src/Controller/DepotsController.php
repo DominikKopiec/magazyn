@@ -86,6 +86,9 @@ class DepotsController extends AbstractController
 
         $repository = $this->getDoctrine()->getRepository(Depots::class);
         $depot = $repository->find($id);
+
+        $repo = $this->getDoctrine()->getRepository(Articles::class);
+        $articles = $repo->findAll();
         
         $status = new Status();
         $form = $this->createFormBuilder($status)
@@ -97,7 +100,10 @@ class DepotsController extends AbstractController
             ->add('article', EntityType::class, [
                 'class' => Articles::class,
                 'choice_label' => 'name',
-                'attr' => array('class' => 'form-control'),  
+                'attr' => array('class' => 'form-control'),
+                'choice_attr' => function ($val) {
+                    return ['jednostka' => $val->getUnit()->getId()];
+                }, 
             ])
             ->add('unit', EntityType::class, [
                 'class' => Units::class,
@@ -115,7 +121,6 @@ class DepotsController extends AbstractController
             ->add('file', FileType::class, [
                 'label' => 'Dodaj załącznik',
                 'attr' => ['class' => 'form-control-file'],
-                // unmapped means that this field is not associated to any entity property
                 'mapped' => false,
 
                 // make it optional so you don't have to re-upload the PDF file

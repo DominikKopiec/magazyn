@@ -15,3 +15,16 @@
     </div>
 {% endblock %}
 
+{% block javascripts %}
+<script>
+    $( "#form_article" ).change(function() {
+        wartosc = $( "#form_article option:selected" ).attr('jednostka');
+        console.log(wartosc);
+        $('#form_article selected').attr("value", wartosc);
+        
+    });
+                
+            
+</script>
+{% endblock %}
+
